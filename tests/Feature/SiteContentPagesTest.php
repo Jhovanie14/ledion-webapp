@@ -2,12 +2,6 @@
 
 use function Pest\Laravel\get;
 
-beforeEach(function () {
-    // Page components are added in later tasks; assert only the server-side
-    // Inertia component contract for now. The override is removed in Task 8.
-    config(['inertia.testing.ensure_pages_exist' => false]);
-});
-
 dataset('content pages', [
     ['/services', 'site/services/index'],
     ['/pricing', 'site/pricing'],
