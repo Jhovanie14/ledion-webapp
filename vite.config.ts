@@ -7,7 +7,7 @@ import { bunny } from 'laravel-vite-plugin/fonts';
 import { defineConfig } from 'vite';
 
 export default defineConfig({
-server: {
+    server: {
         cors: true,
         origin: 'https://vite.ledion-webapp.kube',
         hmr: {
@@ -25,9 +25,9 @@ server: {
             input: ['resources/css/app.css', 'resources/js/app.tsx'],
             refresh: true,
             fonts: [
-                bunny('Instrument Sans', {
-                    weights: [400, 500, 600],
-                }),
+                bunny('Inter', { weights: [400, 500, 600] }),
+                bunny('Bricolage Grotesque', { weights: [400, 500, 600, 700] }),
+                bunny('Geist Mono', { weights: [400, 500] }),
             ],
         }),
         inertia({ ssr: false }),
