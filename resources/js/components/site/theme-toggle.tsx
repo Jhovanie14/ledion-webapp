@@ -10,7 +10,7 @@ export function ThemeToggle() {
         <Button
             variant="ghost"
             size="icon"
-            aria-label="Toggle dark mode"
+            aria-label={resolvedAppearance === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
             onClick={() => updateAppearance(resolvedAppearance === 'dark' ? 'light' : 'dark')}
         >
             <Sun className="hidden dark:block" />

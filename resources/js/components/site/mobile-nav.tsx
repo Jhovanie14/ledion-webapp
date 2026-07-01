@@ -4,7 +4,7 @@ import { Menu } from 'lucide-react';
 import { NavLink } from '@/components/site/nav-link';
 import { ThemeToggle } from '@/components/site/theme-toggle';
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { NAV_ITEMS, isCta, isVisible } from '@/lib/navigation';
 
 export function MobileNav() {
@@ -23,6 +23,7 @@ export function MobileNav() {
                 <SheetContent side="right" className="w-72">
                     <SheetHeader>
                         <SheetTitle className="text-left">Ledion Autocare</SheetTitle>
+                        <SheetDescription className="sr-only">Site navigation</SheetDescription>
                     </SheetHeader>
                     <nav className="mt-6 flex flex-col gap-1 px-4" aria-label="Mobile primary">
                         {NAV_ITEMS.filter((item) => isVisible(item, 'mobile')).map((item) => (
