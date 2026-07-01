@@ -38,8 +38,9 @@ A modern, luxury-feeling car-detailing site with:
 2. **Fidelity:** copy the visual identity, then optimize.
 3. **Theme scope:** adopt the purple brand + radius scale **globally** in
    `resources/css/app.css` (restyles admin/dashboard/auth too — one brand).
-4. **Fonts:** self-host via `@fontsource` (Bricolage Grotesque, Inter, Geist
-   Mono) — no external requests, no layout shift.
+4. **Fonts:** self-host via the project's existing `bunny()` Vite font helper
+   (Bricolage Grotesque, Inter, Geist Mono) — no external requests, no layout
+   shift, and no new dependency (already used for Instrument Sans).
 5. **Scope of full effort:** the entire `(site)`, delivered in **three phases**
    (below). Each phase is its own spec → plan → build cycle. This document
    fully specifies **Phase 1** and records a roadmap for Phases 2–3.
@@ -78,9 +79,11 @@ A modern, luxury-feeling car-detailing site with:
 - Extend the `@theme` block with the radius scale
   (`--radius-sm` … `--radius-4xl` as `calc()` multiples of `--radius`) and add
   `--font-heading: var(--font-display)` and `--font-mono: var(--font-mono)`.
-- Add `@fontsource` packages (Bricolage Grotesque, Inter, Geist Mono) —
-  **package.json change, requires approval** — import them in `resources/js/app.tsx`
-  and map `--font-display` / `--font-sans` / `--font-mono` accordingly.
+- Self-host Bricolage Grotesque, Inter, and Geist Mono via the existing
+  `bunny()` font helper in `vite.config.ts` (no new dependency), and set
+  `--font-display` / `--font-sans` / `--font-mono` to those family names in
+  `@theme`. If a family is unavailable on Bunny, keep it out of `bunny()` and
+  let the token fall back to its system stack.
 - Keep the existing `@layer base` reset and the starter kit's `@source`,
   `tw-animate-css`, dark `@custom-variant` lines.
 
