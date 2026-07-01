@@ -1,0 +1,21 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: ledion-webapp-production
+
+resources:
+  - app-volumes.yaml
+  - postgres-volumes.yaml
+  - ../../base
+  - namespace.yaml
+  - config-patch.yaml
+
+# Add production-specific patches here
+patches:
+  - path: ingress-patch.yaml
+  - path: deployment-patch.yaml
+
+images:
+  - name: ledion-webapp:latest
+    newName: ledion-webapp
+    newTag: production-latest
