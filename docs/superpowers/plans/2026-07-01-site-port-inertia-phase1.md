@@ -198,10 +198,10 @@ git commit -m "chore: add sheet and badge shadcn components"
 **Interfaces:**
 - Consumes: Wayfinder named routes `home`, `booking` from `@/routes` (created in Task 7; this task compiles against the existing `@/routes` barrel and the two are added there once routes exist — see Task 7 note).
 - Produces:
-  - `type NavItem = { label: string; href: string; variant?: "link" | "cta"; visibility?: "all" | "desktop" | "mobile" }`
-  - `const NAV_ITEMS: readonly NavItem[]`
-  - `function isVisible(item: NavItem, surface: "desktop" | "mobile"): boolean`
-  - `function isCta(item: NavItem): boolean`
+  - `type SiteNavItem = { label: string; href: string; variant?: "link" | "cta"; visibility?: "all" | "desktop" | "mobile" }` (named `SiteNavItem` to avoid colliding with the existing `@/types` `NavItem`, which is `{ title, href, icon }` for the authenticated app)
+  - `const NAV_ITEMS: readonly SiteNavItem[]`
+  - `function isVisible(item: SiteNavItem, surface: "desktop" | "mobile"): boolean`
+  - `function isCta(item: SiteNavItem): boolean`
 
 - [ ] **Step 1: Create the config + helpers**
 
@@ -209,7 +209,12 @@ git commit -m "chore: add sheet and badge shadcn components"
 // resources/js/lib/navigation.ts
 import { booking } from '@/routes';
 
-export type NavItem = {
+/**
+ * Marketing-site nav item. Named `SiteNavItem` (not `NavItem`) to avoid
+ * colliding with the existing `@/types` `NavItem` used by the authenticated
+ * app, which has a different shape (`title`/`href`/`icon`).
+ */
+export type SiteNavItem = {
     /** Visible text for the link. */
     label: string;
     /** Resolved URL string (from a Wayfinder route helper). */
@@ -228,18 +233,18 @@ export type NavItem = {
  * NOTE: In Phase 1 only Book Now targets a real page. Content links
  * (Services, Pricing, ...) are added in Phase 2 when those routes exist.
  */
-export const NAV_ITEMS: readonly NavItem[] = [
+export const NAV_ITEMS: readonly SiteNavItem[] = [
     { label: 'Book Now', href: booking().url, variant: 'cta' },
 ];
 
 /** Whether an item should render on the given surface. */
-export function isVisible(item: NavItem, surface: 'desktop' | 'mobile'): boolean {
+export function isVisible(item: SiteNavItem, surface: 'desktop' | 'mobile'): boolean {
     const visibility = item.visibility ?? 'all';
     return visibility === 'all' || visibility === surface;
 }
 
 /** True for call-to-action items (rendered as a button, kept out of the link row). */
-export function isCta(item: NavItem): boolean {
+export function isCta(item: SiteNavItem): boolean {
     return item.variant === 'cta';
 }
 ```
@@ -443,7 +448,7 @@ git commit -m "feat: add site landing primitives"
 - Modify: `resources/js/app.tsx`
 
 **Interfaces:**
-- Consumes: `NAV_ITEMS`, `isVisible`, `isCta`, `NavItem` (Task 3); `Section`-siblings not needed here; `Button` from `@/components/ui/button`; `Sheet*` from `@/components/ui/sheet` (Task 2); `useAppearance` from `@/hooks/use-appearance`; `Link`, `usePage` from `@inertiajs/react`; `home` from `@/routes` (Task 7).
+- Consumes: `NAV_ITEMS`, `isVisible`, `isCta`, `SiteNavItem` (Task 3); `Button` from `@/components/ui/button`; `Sheet*` from `@/components/ui/sheet` (Task 2); `useAppearance` from `@/hooks/use-appearance`; `useCurrentUrl` from `@/hooks/use-current-url` (existing); `Link` from `@inertiajs/react`; `home` from `@/routes` (Task 7).
 - Produces: `function ThemeToggle()`, `function NavLink({ item, onNavigate?, className? })`, `function DesktopNav()`, `function DesktopActions()`, `function MobileNav()`, `function SiteHeader()`, `function SiteFooter()`, `default function SiteLayout({ children })`.
 
 - [ ] **Step 1: ThemeToggle (reuses existing appearance system)**
@@ -476,14 +481,15 @@ export function ThemeToggle() {
 
 ```tsx
 // resources/js/components/site/nav-link.tsx
-import { Link, usePage } from '@inertiajs/react';
+import { Link } from '@inertiajs/react';
 
 import { Button } from '@/components/ui/button';
+import { useCurrentUrl } from '@/hooks/use-current-url';
 import { cn } from '@/lib/utils';
-import type { NavItem } from '@/lib/navigation';
+import type { SiteNavItem } from '@/lib/navigation';
 
 export type NavLinkProps = {
-    item: NavItem;
+    item: SiteNavItem;
     /** Called after a click — used to close the mobile sheet. */
     onNavigate?: () => void;
     className?: string;
@@ -491,7 +497,7 @@ export type NavLinkProps = {
 
 export function NavLink({ item, onNavigate, className }: NavLinkProps) {
     const { href, label, variant = 'link' } = item;
-    const { url } = usePage();
+    const { isCurrentOrParentUrl } = useCurrentUrl();
 
     if (variant === 'cta') {
         return (
@@ -502,7 +508,7 @@ export function NavLink({ item, onNavigate, className }: NavLinkProps) {
     }
 
     // Active on the linked route or a nested page under it (e.g. /services/detailing).
-    const isActive = url === href || url.startsWith(`${href}/`);
+    const isActive = isCurrentOrParentUrl(href);
 
     return (
         <Link
@@ -1241,5 +1247,6 @@ git commit -m "feat: assemble landing page and booking placeholder"
 - **Build-order caveat (intentional):** Tasks 3, 5, 6 import `@/routes` helpers (`home`, `booking`) that Wayfinder generates in Task 7, so their build verification is explicitly deferred to Task 7/8 rather than run in-task. This keeps each task's code complete while acknowledging the one cross-task dependency. If executing strictly one-commit-at-a-time with a green build gate, run Tasks 3–7 as a group before the first build.
 - **Type consistency:** `NavItem`/`isVisible`/`isCta` defined in Task 3, consumed with matching signatures in Task 5. `NavLinkProps` derives from `NavItem`. `ImageSlot` prop shape defined in Task 4, used with `src`/`alt`/`priority`/`sizes`/`className` in Task 6. `home()`/`booking()` return objects with `.url` (Wayfinder), used consistently.
 - **Nav scope note:** Phase 1 `NAV_ITEMS` contains only the Book Now CTA (content routes don't exist yet). `DesktopNav` renders an empty link row until Phase 2 appends Services/Pricing/etc. — intentional, not a gap.
+- **Existing-primitive reuse:** the marketing header keeps the Next.js *visual identity* but is built from this repo's idioms — active state via the existing `useCurrentUrl().isCurrentOrParentUrl` hook (not a hand-rolled `usePage().url` check), a distinct `SiteNavItem` type to avoid colliding with `@/types` `NavItem`, and the shared `useAppearance` hook for the toggle. It does **not** reuse `app-header.tsx` (auth-app chrome: avatar/breadcrumbs/search — wrong purpose and look). Adopting the shadcn `NavigationMenu` primitive for the desktop link row is deferred to Phase 2, where real links + a Services dropdown justify it (Phase 1's link row is empty).
 - **No placeholders:** every code step contains complete, runnable code.
 ```
