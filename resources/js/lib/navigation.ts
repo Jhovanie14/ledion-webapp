@@ -1,4 +1,4 @@
-import { booking } from '@/routes';
+import { about, booking, contact, faq, gallery, pricing, services } from '@/routes';
 
 /**
  * Marketing-site nav item. Named `SiteNavItem` (not `NavItem`) to avoid
@@ -25,6 +25,12 @@ export type SiteNavItem = {
  * (Services, Pricing, ...) are added in Phase 2 when those routes exist.
  */
 export const NAV_ITEMS: readonly SiteNavItem[] = [
+    { label: 'Services', href: services().url },
+    { label: 'Pricing', href: pricing().url },
+    { label: 'Gallery', href: gallery().url },
+    { label: 'About', href: about().url },
+    { label: 'FAQ', href: faq().url },
+    { label: 'Contact', href: contact().url },
     { label: 'Book Now', href: booking().url, variant: 'cta' },
 ];
 
