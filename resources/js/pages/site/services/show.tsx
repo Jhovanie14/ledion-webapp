@@ -6,6 +6,7 @@ import { PageHeader } from '@/components/site/landing/page-header';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { getServiceBySlug, type Service } from '@/lib/services';
+import { booking, services } from '@/routes';
 
 export default function ServiceShow({ slug }: { slug: string }) {
     const service = getServiceBySlug(slug);
@@ -20,7 +21,7 @@ export default function ServiceShow({ slug }: { slug: string }) {
                         We couldn&apos;t find that service. Browse our full range instead.
                     </p>
                     <Button asChild variant="outline">
-                        <Link href="/services">View all services</Link>
+                        <Link href={services().url}>View all services</Link>
                     </Button>
                 </main>
             </>
@@ -53,7 +54,7 @@ export default function ServiceShow({ slug }: { slug: string }) {
                             </ul>
                             <div>
                                 <Button asChild size="lg">
-                                    <Link href="/booking">Book this service</Link>
+                                    <Link href={booking().url}>Book this service</Link>
                                 </Button>
                             </div>
                         </div>
@@ -96,7 +97,7 @@ export default function ServiceShow({ slug }: { slug: string }) {
                                         </CardContent>
                                         <CardFooter>
                                             <Button asChild className="w-full" variant="outline">
-                                                <Link href="/booking">Book {pkg.name}</Link>
+                                                <Link href={booking().url}>Book {pkg.name}</Link>
                                             </Button>
                                         </CardFooter>
                                     </Card>

@@ -33,7 +33,7 @@ export default function ServicesIndex() {
                                             className="group rounded-2xl outline-none focus-visible:ring-3 focus-visible:ring-ring/30"
                                         >
                                             <Card className="h-full rounded-2xl transition-colors group-hover:border-primary">
-                                                <div className="-mt-(--card-spacing) flex aspect-video w-full items-center justify-center bg-muted text-muted-foreground/60 transition-colors group-hover:bg-muted/70">
+                                                <div className="-mt-6 flex aspect-video w-full items-center justify-center overflow-hidden rounded-t-xl bg-muted text-muted-foreground/60 transition-colors group-hover:bg-muted/70">
                                                     <ImageIcon className="size-8" aria-hidden />
                                                     <span className="sr-only">{service.title} image coming soon</span>
                                                 </div>
