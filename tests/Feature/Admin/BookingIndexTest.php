@@ -8,12 +8,6 @@ use function Pest\Laravel\get;
 
 uses(RefreshDatabase::class);
 
-// Task 9 adds the bookings/index and bookings/show page components; until then,
-// disable Inertia's page-existence check so these backend tests can pass.
-beforeEach(function () {
-    config(['inertia.testing.ensure_pages_exist' => false]);
-});
-
 test('guests cannot see the admin bookings list', function () {
     get('/bookings')->assertRedirect('/login');
 });
