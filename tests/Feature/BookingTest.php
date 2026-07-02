@@ -91,10 +91,6 @@ test('booking validation rejects bad input', function (array $payload, string $f
 ]);
 
 test('the confirmation page renders a known booking', function () {
-    // The site/booking-confirmation page component is added in Task 8; until then
-    // don't enforce its on-disk existence. Remove this line once Task 8 lands.
-    config(['inertia.testing.ensure_pages_exist' => false]);
-
     $booking = Booking::factory()->create(['reference' => 'LA-SHOW1']);
 
     get('/booking/LA-SHOW1')

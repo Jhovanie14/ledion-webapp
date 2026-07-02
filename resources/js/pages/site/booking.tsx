@@ -1,21 +1,20 @@
-import { Head, Link } from '@inertiajs/react';
+import { Head } from '@inertiajs/react';
 
-import { Button } from '@/components/ui/button';
-import { home } from '@/routes';
+import { BookingStepper } from '@/components/site/booking/booking-stepper';
+import { PageHeader } from '@/components/site/landing/page-header';
 
 export default function Booking() {
     return (
         <>
-            <Head title="Booking" />
-            <main className="mx-auto flex min-h-[70svh] max-w-2xl flex-col items-center justify-center gap-4 px-4 text-center">
-                <h1 className="font-heading text-3xl font-semibold tracking-tight sm:text-4xl">Booking</h1>
-                <p className="text-muted-foreground">
-                    Online booking with calendar scheduling is coming soon. Choose in-shop or home service and
-                    pick your time — right here.
-                </p>
-                <Button asChild variant="outline">
-                    <Link href={home().url}>Back to home</Link>
-                </Button>
+            <Head title="Book an Appointment — Ledion Autocare" />
+            <main>
+                <PageHeader
+                    title="Book an Appointment"
+                    description="In-shop or home service — pick your services, choose a time, and you're set."
+                />
+                <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
+                    <BookingStepper />
+                </div>
             </main>
         </>
     );
