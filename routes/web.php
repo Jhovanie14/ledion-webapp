@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BookingController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -7,9 +8,9 @@ Route::get('/', function () {
     return Inertia::render('site/home');
 })->name('home');
 
-Route::get('/booking', function () {
-    return Inertia::render('site/booking');
-})->name('booking');
+Route::get('/booking', [BookingController::class, 'create'])->name('booking');
+Route::post('/booking', [BookingController::class, 'store'])->name('booking.store');
+Route::get('/booking/{booking:reference}', [BookingController::class, 'show'])->name('booking.show');
 
 Route::get('/services', function () {
     return Inertia::render('site/services/index');

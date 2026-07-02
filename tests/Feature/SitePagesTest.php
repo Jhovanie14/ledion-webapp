@@ -8,7 +8,7 @@ test('the marketing home page renders', function () {
         ->assertInertia(fn ($page) => $page->component('site/home'));
 });
 
-test('the booking placeholder page renders', function () {
+test('the booking page renders', function () {
     get('/booking')
         ->assertOk()
         ->assertInertia(fn ($page) => $page->component('site/booking'));
