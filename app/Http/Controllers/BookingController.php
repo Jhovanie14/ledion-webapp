@@ -43,8 +43,16 @@ class BookingController extends Controller
 
     public function show(Booking $booking): Response
     {
+        // This route is public and shareable, so expose only the fields the
+        // confirmation page renders — never the customer's contact details.
         return Inertia::render('site/booking-confirmation', [
-            'booking' => $booking,
+            'booking' => [
+                'reference' => $booking->reference,
+                'service_type' => $booking->service_type,
+                'scheduled_date' => $booking->scheduled_date->format('Y-m-d'),
+                'scheduled_time' => $booking->scheduled_time,
+                'estimated_total' => $booking->estimated_total,
+            ],
         ]);
     }
 

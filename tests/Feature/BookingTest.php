@@ -100,6 +100,24 @@ test('the confirmation page renders a known booking', function () {
             ->where('booking.reference', 'LA-SHOW1'));
 });
 
+test('the public confirmation does not expose customer PII', function () {
+    Booking::factory()->create([
+        'reference' => 'LA-PII01',
+        'customer_email' => 'secret@example.com',
+        'customer_phone' => '0917 000 0000',
+        'customer_address' => '123 Secret St',
+    ]);
+
+    get('/booking/LA-PII01')
+        ->assertOk()
+        ->assertInertia(fn ($page) => $page
+            ->component('site/booking-confirmation')
+            ->where('booking.reference', 'LA-PII01')
+            ->missing('booking.customer_email')
+            ->missing('booking.customer_phone')
+            ->missing('booking.customer_address'));
+});
+
 test('an unknown reference 404s', function () {
     get('/booking/LA-NOPE0')->assertNotFound();
 });

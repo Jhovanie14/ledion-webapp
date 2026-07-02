@@ -14,7 +14,13 @@ function Row({ label, value }: { label: string; value: string }) {
     );
 }
 
-export default function BookingConfirmation({ booking: record }: { booking: BookingRecord }) {
+/** Only the fields exposed by the public confirmation endpoint (no customer PII). */
+type ConfirmationBooking = Pick<
+    BookingRecord,
+    'reference' | 'service_type' | 'scheduled_date' | 'scheduled_time' | 'estimated_total'
+>;
+
+export default function BookingConfirmation({ booking: record }: { booking: ConfirmationBooking }) {
     // scheduled_date is a "Y-m-d" string; anchor to local noon to avoid TZ drift.
     const dateLabel = new Date(`${record.scheduled_date}T12:00:00`).toLocaleDateString('en-PH', {
         year: 'numeric',
